@@ -22,7 +22,7 @@ addTaskButton.addEventListener('click', function () {
     taskItem.appendChild(deleteButton);
 
     taskItem.addEventListener('click', function () {    //TODO: fix this part
-        taskItem.classList.toggle('completed');
+        taskItem.classList.toggle('completed');         // TODO: add edit btn & mark as complete
     });
 
     taskList.appendChild(taskItem);
