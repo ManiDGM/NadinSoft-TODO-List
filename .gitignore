@@ -1,1 +1,6 @@
-ECHO is on.
+node_modules/
+
+cypress/screenshots/
+cypress/videos/
+cypress/logs/
+
