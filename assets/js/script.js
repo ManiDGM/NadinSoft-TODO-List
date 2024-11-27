@@ -1,65 +1,53 @@
-const taskInput = document.getElementById('taskInput');
-const addTaskButton = document.getElementById('addTaskButton');
-const taskList = document.getElementById('taskList');
-
-// add a new task 
+var taskInput = document.getElementById('taskInput');
+var addTaskButton = document.getElementById('addTaskButton');
+var taskList = document.getElementById('taskList');
+// Add a new task
 addTaskButton.addEventListener('click', function () {
-    const taskText = taskInput.value.trim();
-    if (taskText === '') return; 
-
-    // create a new list item 
-    const taskItem = document.createElement('li');
-    const taskSpan = document.createElement('span');
+    var taskText = taskInput.value.trim();
+    if (!taskText)
+        return;
+    // Create a new list item
+    var taskItem = document.createElement('li');
+    var taskSpan = document.createElement('span');
     taskSpan.textContent = taskText;
-
-    
     taskItem.appendChild(taskSpan);
-
-    // create'Complete' btn
-    const completeButton = document.createElement('button');
-    const checkIcon = document.createElement('i');
-    checkIcon.className = 'fas fa-check';
-    completeButton.appendChild(checkIcon);
-
-    completeButton.addEventListener('click', function () {
+    // Complete button
+    var completeButton = createButton('fas fa-check', function () {
         taskSpan.classList.toggle('completed');
     });
-
-    // create'Edit' btn
-    const editButton = document.createElement('button');
-    const editIcon = document.createElement('i');
-    editIcon.className = 'fas fa-edit';
-    editButton.appendChild(editIcon);
-
-    editButton.addEventListener('click', function () {
-        const newTaskText = prompt('Edit your task:', taskSpan.textContent);
-        if (newTaskText !== null && newTaskText.trim() !== '') {
-            taskSpan.textContent = newTaskText.trim();
-        }
+    // Edit button
+    var editButton = createButton('fas fa-edit', function () {
+        var inputField = document.createElement('input');
+        inputField.type = 'text';
+        inputField.value = taskSpan.textContent || '';
+        inputField.className = 'edit-input';
+        inputField.addEventListener('blur', function () {
+            taskSpan.textContent = inputField.value.trim() || taskSpan.textContent;
+            taskItem.replaceChild(taskSpan, inputField);
+        });
+        taskItem.replaceChild(inputField, taskSpan);
+        inputField.focus();
     });
-
-    // create 'Delete' btn
-    const deleteButton = document.createElement('button');
-    const trashIcon = document.createElement('i');
-    trashIcon.className = 'fas fa-trash';
-    deleteButton.appendChild(trashIcon);
-
-    deleteButton.addEventListener('click', function () {
+    // Delete button
+    var deleteButton = createButton('fas fa-trash', function () {
         taskList.removeChild(taskItem);
     });
-
-    const buttonContainer = document.createElement('div');
-    buttonContainer.classList.add('button-container');
-    buttonContainer.appendChild(completeButton);
-    buttonContainer.appendChild(editButton);
-    buttonContainer.appendChild(deleteButton);
     
-    // add the button container to the task item
+    var buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('button-container');
+    buttonContainer.append(completeButton, editButton, deleteButton);
     taskItem.appendChild(buttonContainer);
-
-    // add the task item to the task list
     taskList.appendChild(taskItem);
 
-    // clear the input field
     taskInput.value = '';
 });
+
+
+function createButton(iconClass, onClick) {
+    var button = document.createElement('button');
+    var icon = document.createElement('i');
+    icon.className = iconClass;
+    button.appendChild(icon);
+    button.addEventListener('click', onClick);
+    return button;
+}
